@@ -1,3 +1,31 @@
-<input placeholder="Enter your name">
-<input type="submit">
-<p id="gpa"> GPA: </p>
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title> Sample Page </title>
+  <link rel="stylesheet" type="text/css" href="GPA Calculator/style.css">
+</head>
+<body>
+<div class="login-box">
+  <h2>Login</h2>
+  <form action="{{ url_for('login') }}" method="post">
+    <div class="user-box">
+      <input type="text" name="username" required="" id="username">
+      <label>Username</label>
+    </div>
+    <div class="user-box">
+      <input type="password" name="password" required="" id="password">
+      <label>Password</label>
+    </div>
+    <button type="submit">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Login
+    </button>
+  </form>
+</div>
+</body>
+</html>
