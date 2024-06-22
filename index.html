@@ -92,7 +92,7 @@
                 const credits = row[2];
                 const grade = row[3];
                 totalCredits += credits;
-                points += (inflatedPoints(grade) + difficultyPoints(difficulty)) * credits;
+                points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
             });
             const freshmenGPA = points / totalCredits;
 
