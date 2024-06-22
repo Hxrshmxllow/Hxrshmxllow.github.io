@@ -56,7 +56,7 @@
                 const credits = row[2];
                 const grade = row[3];
                 totalCredits += credits;
-                points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+                points += (fourPointScale(grade) + difficultyPoints(difficulty)) * credits;
             });
             const seniorGPA = points / totalCredits;
 
@@ -68,7 +68,7 @@
                 const credits = row[2];
                 const grade = row[3];
                 totalCredits += credits;
-                points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+                points += (fourPointScale(grade) + difficultyPoints(difficulty)) * credits;
             });
             const juniorGPA = points / totalCredits;
 
@@ -80,7 +80,7 @@
                 const credits = row[2];
                 const grade = row[3];
                 totalCredits += credits;
-                points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+                points += (fourPointScale(grade) + difficultyPoints(difficulty)) * credits;
             });
             const sophomoreGPA = points / totalCredits;
 
@@ -92,7 +92,7 @@
                 const credits = row[2];
                 const grade = row[3];
                 totalCredits += credits;
-                points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+                points += (fourPointScale(grade) + difficultyPoints(difficulty)) * credits;
             });
             const freshmenGPA = points / totalCredits;
 
@@ -143,6 +143,25 @@
                 "C-": 1.67,
                 "D": 1.33,
                 "D-": 1.0
+            };
+            return gradeMap[grade] || 0.00;
+        }
+
+        function fourPointScale(grade) {
+            const gradeMap = {
+                "A+": 4.0,
+                "A": 4.0,
+                "A-": 3.7,
+                "B+": 3.3,
+                "B": 3.0,
+                "B-": 2.7,
+                "C+": 2.3,
+                "C": 2.0,
+                "C-": 1.7,
+                "D+": 1.3,
+                "D": 1.0,
+                "D-": 0.0,
+                "F": 0.0,
             };
             return gradeMap[grade] || 0.00;
         }
