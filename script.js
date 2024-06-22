@@ -1,0 +1,132 @@
+document.getElementById('gpaForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); 
+    const file = document.querySelector('input[type=file]').files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function (event) {
+        const arrayBuffer = event.target.result;
+        main(arrayBuffer);
+    };
+
+    if (file) {
+        reader.readAsArrayBuffer(file);
+    } else {
+        alert("Error reading file. Please try again.");
+    }
+});
+
+const xlsx = require('xlsx');
+const fs = require('fs');
+
+const xlsx = require('xlsx');
+
+function main(arrayBuffer) {
+    let rows = getRows(arrayBuffer, 'Senior Year');
+    let points = 0.00;
+    let totalCredits = 0;
+
+    rows.forEach(row => {
+        const difficulty = row[0];
+        const credits = row[2];
+        const grade = row[3];
+        totalCredits += credits;
+        points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+    });
+    const seniorGPA = points / totalCredits;
+
+    rows = getRows(arrayBuffer, 'Junior Year');
+    points = 0.00;
+    totalCredits = 0;
+    rows.forEach(row => {
+        const difficulty = row[0];
+        const credits = row[2];
+        const grade = row[3];
+        totalCredits += credits;
+        points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+    });
+    const juniorGPA = points / totalCredits;
+
+    rows = getRows(arrayBuffer, 'Sophomore Year');
+    points = 0.00;
+    totalCredits = 0;
+    rows.forEach(row => {
+        const difficulty = row[0];
+        const credits = row[2];
+        const grade = row[3];
+        totalCredits += credits;
+        points += (gradePoints(grade) + difficultyPoints(difficulty)) * credits;
+    });
+    const sophomoreGPA = points / totalCredits;
+
+    rows = getRows(arrayBuffer, 'Freshmen Year');
+    points = 0.00;
+    totalCredits = 0;
+    rows.forEach(row => {
+        const difficulty = row[0];
+        const credits = row[2];
+        const grade = row[3];
+        totalCredits += credits;
+        points += (inflatedPoints(grade) + difficultyPoints(difficulty)) * credits;
+    });
+    const freshmenGPA = points / totalCredits;
+
+    console.log("Freshmen GPA: " + freshmenGPA.toFixed(2));
+    console.log("Sophomore GPA: " + sophomoreGPA.toFixed(2));
+    console.log("Junior GPA: " + juniorGPA.toFixed(2));
+    console.log("Senior GPA: " + seniorGPA.toFixed(2));
+    const finalGPA = (juniorGPA + sophomoreGPA + freshmenGPA + seniorGPA) / 4.0;
+    console.log("Final GPA: " + finalGPA.toFixed(2));
+    return finalGPA;
+}
+
+function getRows(arrayBuffer, sheetName, startRow = 1) {
+    const workbook = xlsx.read(arrayBuffer, { type: 'buffer' });
+    const sheet = workbook.Sheets[sheetName];
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1, raw: true });
+
+    return rows.slice(startRow);
+}
+
+function inflatedPoints(grade) {
+    const gradeMap = {
+        "A+": 4.6,
+        "A": 4.3,
+        "A-": 4.0,
+        "B+": 3.6,
+        "B": 3.3,
+        "B-": 3.0,
+        "C+": 2.6,
+        "C": 2.3,
+        "C-": 2.0,
+        "D": 1.6,
+        "D-": 1.3
+    };
+    return gradeMap[grade] || 0.00;
+}
+
+function gradePoints(grade) {
+    const gradeMap = {
+        "A+": 4.33,
+        "A": 4.0,
+        "A-": 3.67,
+        "B+": 3.33,
+        "B": 3.0,
+        "B-": 2.67,
+        "C+": 2.33,
+        "C": 2.0,
+        "C-": 1.67,
+        "D": 1.33,
+        "D-": 1.0
+    };
+    return gradeMap[grade] || 0.00;
+}
+
+function difficultyPoints(difficulty) {
+    const difficultyMap = {
+        "AP": 2.0,
+        "Honors": 1.0
+    };
+    return difficultyMap[difficulty] || 0.00;
+}
+
+module.exports = { main };
